@@ -4,18 +4,25 @@ import { Todo } from '../../models/todo';
 @Injectable()
 export class TodoService {
 
-    private dbTodos: Todo[];
+    private dbTodos: Todo[] = [];
+    constructor() {
+        let t1 = new Todo(1, "First todo", new Date());
+        let t2 = new Todo(2, "2nd Todo");
+        
+        this.dbTodos = [t1, t2];
+    }
     getTodos(): Todo[] {
         //retrieve todos from storage, local or 
         //external and return it
-        let t1 = new Todo(1, "First todo", new Date());
-        let t2 = new Todo(2, "2nd Todo");
-        return [t1, t2];
+        return this.dbTodos;
     }
     
     create(todoText: string) {
+        debugger
         //ideally we would have some complex db interaction process
-        let id = this.getId();
+        console.log(this.getMostRecentId());
+        let id = this.getMostRecentId() + 1;
+        console.log(id);
         let todo = new Todo(id, todoText, new Date());
         this.dbTodos.push(todo);
     }
@@ -37,7 +44,7 @@ export class TodoService {
         return this.dbTodos;
     }
     /* a utility function to get the latest id */
-    private getId():number {
+    private getMostRecentId():number {
         let maxTodo = this.dbTodos.reduce((pValue,cValue) => cValue.id > pValue.id ? cValue:pValue, this.dbTodos[0]);
         return maxTodo.id;
     }

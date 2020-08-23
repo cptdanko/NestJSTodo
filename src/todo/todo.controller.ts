@@ -1,17 +1,35 @@
-import { Controller, Get, Post, Put, Param, Delete, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Post, 
+    Param, 
+    Delete, 
+    Patch, 
+    Body,
+    Res, 
+    Render } from '@nestjs/common';
 import { TodoService } from 'src/services/todo/todo.service';
 import { Todo } from '../models/todo';
+import { Response } from 'express';
 
 @Controller('todo')
 export class TodoController {
 
     constructor(private todoService: TodoService) {}
 
+    @Get("/todos")
+    getHello(@Res() res: Response) {
+      return res.render( 
+        'todo',
+        {text: this.todoService.getTodos()[0].text}
+      );
+    }
+
     @Get("/")
     getTodos(): Todo[] {
+        console.log("getTodos");
+
+        this.todoService.create("Sample");
         return this.todoService.getTodos();
     }
-    
+
     /* Accept a parameter to create a todo */
     @Post("/create")
     async createTodo(@Body('text') text: string) {
